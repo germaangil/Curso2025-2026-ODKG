@@ -1,322 +1,225 @@
-@prefix : <https://linked.melbourne.example/ontology/urban-sensors#> .
-@prefix us: <https://linked.melbourne.example/ontology/urban-sensors#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix us:   <https://linked.melbourne.example/lcc/ontology/urban-sensors#> .
 @prefix sosa: <http://www.w3.org/ns/sosa/> .
 @prefix schema: <http://schema.org/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@base <https://linked.melbourne.example/ontology/urban-sensors> .
 
-<https://linked.melbourne.example/ontology/urban-sensors> rdf:type owl:Ontology ;
-                                                           owl:versionIRI <https://linked.melbourne.example/ontology/urban-sensors/2025-10> ;
-                                                           dcterms:creator "Group 02 — Andosilla Herráiz, Gil Planes, Beamonte Gonzalez, Herrero Míguez, Hunziker Cadabal"@en ;
-                                                           dcterms:description "Lightweight ontology to describe pedestrian and microclimate sensors, their locations, and observations in Melbourne, enriched with address and public-holiday context."@en ;
-                                                           dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-                                                           dcterms:title "Urban Sensors Ontology"@en ;
-                                                           owl:versionInfo "2025-10-02" .
-
-#################################################################
-#    Annotation properties
-#################################################################
-
-###  http://purl.org/dc/terms/creator
-dcterms:creator rdf:type owl:AnnotationProperty .
-
-
-###  http://purl.org/dc/terms/description
-dcterms:description rdf:type owl:AnnotationProperty .
-
-
-###  http://purl.org/dc/terms/license
-dcterms:license rdf:type owl:AnnotationProperty .
-
-
-###  http://purl.org/dc/terms/title
-dcterms:title rdf:type owl:AnnotationProperty .
-
-
-#################################################################
-#    Object Properties
-#################################################################
-
-###  https://linked.melbourne.example/ontology/urban-sensors#addressOfLocation
-us:addressOfLocation rdf:type owl:ObjectProperty ;
-                     owl:inverseOf us:hasAddress ;
-                     rdfs:domain us:StreetAddress ;
-                     rdfs:range us:SensorLocation ;
-                     rdfs:comment "Inverse of hasAddress."@en ;
-                     rdfs:label "address of location"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#appliesToArea
-us:appliesToArea rdf:type owl:ObjectProperty ;
-                 owl:inverseOf us:hasApplicableHoliday ;
-                 rdfs:domain us:PublicHoliday ;
-                 rdfs:range us:AdministrativeArea ;
-                 rdfs:comment "The administrative area(s) where a public holiday is in force."@en ;
-                 rdfs:label "applies to area"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#hasAddress
-us:hasAddress rdf:type owl:ObjectProperty ;
-              rdfs:domain us:SensorLocation ;
-              rdfs:range us:StreetAddress ;
-              rdfs:comment "Links a sensor location to its normalized street address."@en ;
-              rdfs:label "has address"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#hasApplicableHoliday
-us:hasApplicableHoliday rdf:type owl:ObjectProperty ;
-                        rdfs:domain us:AdministrativeArea ;
-                        rdfs:range us:PublicHoliday ;
-                        rdfs:comment "Inverse of appliesToArea."@en ;
-                        rdfs:label "has applicable holiday"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#hasObservation
-us:hasObservation rdf:type owl:ObjectProperty ;
-                  owl:inverseOf us:observedAtLocation ;
-                  rdfs:domain us:SensorLocation ;
-                  rdfs:range sosa:Observation ;
-                  rdfs:comment "Inverse of observedAtLocation; a site aggregates observations."@en ;
-                  rdfs:label "has observation"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#hasSite
-us:hasSite rdf:type owl:ObjectProperty ;
-           owl:inverseOf us:inAdministrativeArea ;
-           rdfs:domain us:AdministrativeArea ;
-           rdfs:range us:SensorLocation ;
-           rdfs:comment "Inverse of inAdministrativeArea; the area has this site."@en ;
-           rdfs:label "has site"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#holidayHasOccurrence
-us:holidayHasOccurrence rdf:type owl:ObjectProperty ;
-                        owl:inverseOf us:occursOnHoliday ;
-                        rdfs:domain us:PublicHoliday ;
-                        rdfs:range sosa:Observation ;
-                        rdfs:comment "Inverse of occursOnHoliday."@en ;
-                        rdfs:label "holiday has occurrence"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#hostsSensor
-us:hostsSensor rdf:type owl:ObjectProperty ;
-               owl:inverseOf us:installedAt ;
-               rdfs:domain us:SensorLocation ;
-               rdfs:range us:Sensor ;
-               rdfs:comment "Relates a sensor location to a sensor that is/was installed there."@en ;
-               rdfs:label "hosts sensor"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#inAdministrativeArea
-us:inAdministrativeArea rdf:type owl:ObjectProperty ;
-                        rdfs:domain us:SensorLocation ;
-                        rdfs:range us:AdministrativeArea ;
-                        rdfs:comment "Places a location within a city or state."@en ;
-                        rdfs:label "in administrative area"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#installedAt
-us:installedAt rdf:type owl:ObjectProperty ;
-               rdfs:domain us:Sensor ;
-               rdfs:range us:SensorLocation ;
-               rdfs:comment "Relates a sensor device to the installation site (sensor location)."@en ;
-               rdfs:label "installed at"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#observedAtLocation
-us:observedAtLocation rdf:type owl:ObjectProperty ;
-                      rdfs:domain sosa:Observation ;
-                      rdfs:range us:SensorLocation ;
-                      rdfs:comment "Links an observation to the sensor location where it was made."@en ;
-                      rdfs:label "observed at location"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#occursOnHoliday
-us:occursOnHoliday rdf:type owl:ObjectProperty ;
-                   rdfs:domain sosa:Observation ;
-                   rdfs:range us:PublicHoliday ;
-                   rdfs:comment "Marks an observation as occurring on a specific public holiday."@en ;
-                   rdfs:label "occurs on holiday"@en .
-
-
-#################################################################
-#    Data properties
-#################################################################
-
-###  https://linked.melbourne.example/ontology/urban-sensors#airTemperature
-us:airTemperature rdf:type owl:DatatypeProperty ;
-                  rdfs:domain us:MicroclimateObservation ;
-                  rdfs:range xsd:decimal ;
-                  rdfs:comment "Air temperature in degrees Celsius."@en ;
-                  rdfs:label "air temperature (°C)"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#humidity
-us:humidity rdf:type owl:DatatypeProperty ;
-            rdfs:domain us:MicroclimateObservation ;
-            rdfs:range xsd:decimal ;
-            rdfs:comment "Relative humidity percentage."@en ;
-            rdfs:label "relative humidity (%)"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#noise
-us:noise rdf:type owl:DatatypeProperty ;
-         rdfs:domain us:MicroclimateObservation ;
-         rdfs:range xsd:decimal ;
-         rdfs:comment "Acoustic noise level, decibels."@en ;
-         rdfs:label "noise (dB)"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#pedestrianCount
-us:pedestrianCount rdf:type owl:DatatypeProperty ;
-                   rdfs:domain us:PedestrianObservation ;
-                   rdfs:range xsd:integer ;
-                   rdfs:comment "Total pedestrians counted during the observation interval."@en ;
-                   rdfs:label "pedestrian count"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#pm10
-us:pm10 rdf:type owl:DatatypeProperty ;
-        rdfs:domain us:MicroclimateObservation ;
-        rdfs:range xsd:decimal ;
-        rdfs:comment "Mass concentration of particulate matter ≤10 µm."@en ;
-        rdfs:label "PM10 concentration (µg/m³)"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#pm25
-us:pm25 rdf:type owl:DatatypeProperty ;
-        rdfs:domain us:MicroclimateObservation ;
-        rdfs:range xsd:decimal ;
-        rdfs:comment "Mass concentration of particulate matter ≤2.5 µm."@en ;
-        rdfs:label "PM2.5 concentration (µg/m³)"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#postcode
-us:postcode rdf:type owl:DatatypeProperty ;
-            rdfs:domain us:StreetAddress ;
-            rdfs:range xsd:string ;
-            rdfs:comment "Postal code in the normalized address."@en ;
-            rdfs:label "postcode"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#sensorId
-us:sensorId rdf:type owl:DatatypeProperty ;
-            rdfs:domain us:Sensor ;
-            rdfs:range xsd:string ;
-            rdfs:comment "Source identifier of a pedestrian or microclimate sensor."@en ;
-            rdfs:label "sensor id"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#siteId
-us:siteId rdf:type owl:DatatypeProperty ;
-          rdfs:domain us:SensorLocation ;
-          rdfs:range xsd:string ;
-          rdfs:comment "Identifier of a sensor installation site (e.g., location_id, site_id)."@en ;
-          rdfs:label "site id"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#streetName
-us:streetName rdf:type owl:DatatypeProperty ;
-              rdfs:domain us:StreetAddress ;
-              rdfs:range xsd:string ;
-              rdfs:comment "Name of the street in the normalized address."@en ;
-              rdfs:label "street name"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#streetNumber
-us:streetNumber rdf:type owl:DatatypeProperty ;
-                rdfs:domain us:StreetAddress ;
-                rdfs:range xsd:string ;
-                rdfs:comment "Street number in the normalized address."@en ;
-                rdfs:label "street number"@en .
-
-
-#################################################################
-#    Classes
-#################################################################
-
-###  http://www.w3.org/ns/sosa/Observation
-sosa:Observation rdf:type owl:Class .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#AdministrativeArea
-us:AdministrativeArea rdf:type owl:Class ;
-                      rdfs:comment "An administrative unit such as a city or state."@en ;
-                      rdfs:label "Administrative area"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#City
-us:City rdf:type owl:Class ;
-        rdfs:subClassOf us:AdministrativeArea ;
-        owl:disjointWith us:State ;
-        rdfs:comment "City-level administrative area (e.g., City of Melbourne)."@en ;
-        rdfs:label "City"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#MicroclimateObservation
-us:MicroclimateObservation rdf:type owl:Class ;
-                           rdfs:subClassOf sosa:Observation ;
-                           owl:disjointWith us:PedestrianObservation ;
-                           rdfs:comment "Environmental reading (e.g., temperature, humidity) from a microclimate device."@en ;
-                           rdfs:label "Microclimate observation"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#MicroclimateSensor
-us:MicroclimateSensor rdf:type owl:Class ;
-                      rdfs:subClassOf us:Sensor ;
-                      owl:disjointWith us:PedestrianSensor ;
-                      rdfs:comment "A device that measures local environmental conditions (air temperature, humidity, particulate matter, etc.)."@en ;
-                      rdfs:label "Microclimate sensor"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#PedestrianObservation
-us:PedestrianObservation rdf:type owl:Class ;
-                         rdfs:subClassOf sosa:Observation ;
-                         rdfs:comment "Hourly pedestrian count observation."@en ;
-                         rdfs:label "Pedestrian observation"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#PedestrianSensor
-us:PedestrianSensor rdf:type owl:Class ;
-                    rdfs:subClassOf us:Sensor ;
-                    rdfs:comment "A sensor device counting pedestrians (City of Melbourne Pedestrian Counting System)."@en ;
-                    rdfs:label "Pedestrian sensor"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#PublicHoliday
-us:PublicHoliday rdf:type owl:Class ;
-                 rdfs:comment "A public holiday that can apply to one or more administrative areas and dates."@en ;
-                 rdfs:label "Public holiday"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#Sensor
-us:Sensor rdf:type owl:Class ;
-          rdfs:comment "Abstract sensor device in the project (pedestrian or microclimate)."@en ;
-          rdfs:label "Sensor"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#SensorLocation
-us:SensorLocation rdf:type owl:Class ;
-                  rdfs:comment "A concrete installation site of a sensor device (enriched with address and coordinates)."@en ;
-                  rdfs:label "Sensor location"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#State
-us:State rdf:type owl:Class ;
-         rdfs:subClassOf us:AdministrativeArea ;
-         rdfs:comment "State-level administrative area (e.g., Victoria)."@en ;
-         rdfs:label "State"@en .
-
-
-###  https://linked.melbourne.example/ontology/urban-sensors#StreetAddress
-us:StreetAddress rdf:type owl:Class ;
-                 rdfs:comment "Normalized address data (street name, number, postcode)."@en ;
-                 rdfs:label "Street address"@en .
-
-
-###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
+<https://linked.melbourne.example/lcc/ontology/urban-sensors>
+    a owl:Ontology ;
+    dcterms:title "Urban Sensors Ontology"@en ;
+    dcterms:description "Lightweight ontology to describe pedestrian and microclimate sensors, their locations, and observations in Melbourne, enriched with address and public-holiday context."@en ;
+    dcterms:creator "Group 02 — Andosilla, Angil, Beamonte Gonzalez, Herrero, Hunziker Cadabal"@en ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    owl:versionInfo "2025-10-02" ;
+    owl:versionIRI <https://linked.melbourne.example/lcc/ontology/urban-sensors/2025-10> .
+
+### ------------ CLASSES ------------
+
+us:Sensor a owl:Class ;
+    rdfs:subClassOf sosa:Sensor ;
+    rdfs:label "Sensor"@en ;
+    rdfs:comment "Abstract sensor device in the project (pedestrian or microclimate)."@en .
+
+us:PedestrianSensor a owl:Class ;
+    rdfs:subClassOf us:Sensor ;
+    rdfs:label "Pedestrian sensor"@en ;
+    rdfs:comment "A sensor device counting pedestrians (City of Melbourne Pedestrian Counting System)."@en .
+
+us:MicroclimateSensor a owl:Class ;
+    rdfs:subClassOf us:Sensor ;
+    rdfs:label "Microclimate sensor"@en ;
+    rdfs:comment "A device that measures local environmental conditions (air temperature, humidity, particulate matter, etc.)."@en .
+
+us:SensorLocation a owl:Class ;
+    rdfs:label "Sensor location"@en ;
+    rdfs:comment "A concrete installation site of a sensor device (enriched with address and coordinates)."@en .
+
+us:StreetAddress a owl:Class ;
+    rdfs:subClassOf schema:PostalAddress ;
+    rdfs:label "Street address"@en ;
+    rdfs:comment "Normalized address data (street name, number, postcode)."@en .
+
+us:AdministrativeArea a owl:Class ;
+    rdfs:subClassOf schema:AdministrativeArea ;
+    rdfs:label "Administrative area"@en ;
+    rdfs:comment "An administrative unit such as a city or state."@en .
+
+us:City a owl:Class ;
+    rdfs:subClassOf us:AdministrativeArea ;
+    rdfs:label "City"@en ;
+    rdfs:comment "City-level administrative area (e.g., City of Melbourne)."@en .
+
+us:State a owl:Class ;
+    rdfs:subClassOf us:AdministrativeArea ;
+    rdfs:label "State"@en ;
+    rdfs:comment "State-level administrative area (e.g., Victoria)."@en .
+
+us:PublicHoliday a owl:Class ;
+    rdfs:label "Public holiday"@en ;
+    rdfs:comment "A public holiday that can apply to one or more administrative areas and dates."@en .
+
+us:PedestrianObservation a owl:Class ;
+    rdfs:subClassOf sosa:Observation ;
+    rdfs:label "Pedestrian observation"@en ;
+    rdfs:comment "Hourly pedestrian count observation."@en .
+
+us:MicroclimateObservation a owl:Class ;
+    rdfs:subClassOf sosa:Observation ;
+    rdfs:label "Microclimate observation"@en ;
+    rdfs:comment "Environmental reading (e.g., temperature, humidity) from a microclimate device."@en .
+
+# Disjointness to address OOPS P10
+us:PedestrianSensor owl:disjointWith us:MicroclimateSensor .
+us:City owl:disjointWith us:State .
+us:PedestrianObservation owl:disjointWith us:MicroclimateObservation .
+
+### ------------ OBJECT PROPERTIES ------------
+
+us:installedAt a owl:ObjectProperty ;
+    rdfs:label "installed at"@en ;
+    rdfs:comment "Relates a sensor device to the installation site (sensor location)."@en ;
+    rdfs:domain us:Sensor ;
+    rdfs:range  us:SensorLocation ;
+    owl:inverseOf us:hostsSensor .
+
+us:hostsSensor a owl:ObjectProperty ;
+    rdfs:label "hosts sensor"@en ;
+    rdfs:comment "Relates a sensor location to a sensor that is/was installed there."@en ;
+    rdfs:domain us:SensorLocation ;
+    rdfs:range  us:Sensor .
+
+us:hasAddress a owl:ObjectProperty ;
+    rdfs:label "has address"@en ;
+    rdfs:comment "Links a sensor location to its normalized street address."@en ;
+    rdfs:domain us:SensorLocation ;
+    rdfs:range  us:StreetAddress ;
+    owl:inverseOf us:addressOfLocation .
+
+us:addressOfLocation a owl:ObjectProperty ;
+    rdfs:label "address of location"@en ;
+    rdfs:comment "Inverse of hasAddress."@en ;
+    rdfs:domain us:StreetAddress ;
+    rdfs:range  us:SensorLocation .
+
+us:inAdministrativeArea a owl:ObjectProperty ;
+    rdfs:label "in administrative area"@en ;
+    rdfs:comment "Places a location within a city or state."@en ;
+    rdfs:domain us:SensorLocation ;
+    rdfs:range  us:AdministrativeArea ;
+    owl:inverseOf us:hasSite .
+
+us:hasSite a owl:ObjectProperty ;
+    rdfs:label "has site"@en ;
+    rdfs:comment "Inverse of inAdministrativeArea; the area has this site."@en ;
+    rdfs:domain us:AdministrativeArea ;
+    rdfs:range  us:SensorLocation .
+
+us:observedAtLocation a owl:ObjectProperty ;
+    rdfs:label "observed at location"@en ;
+    rdfs:comment "Links an observation to the sensor location where it was made."@en ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range  us:SensorLocation ;
+    owl:inverseOf us:hasObservation .
+
+us:hasObservation a owl:ObjectProperty ;
+    rdfs:label "has observation"@en ;
+    rdfs:comment "Inverse of observedAtLocation; a site aggregates observations."@en ;
+    rdfs:domain us:SensorLocation ;
+    rdfs:range  sosa:Observation .
+
+us:occursOnHoliday a owl:ObjectProperty ;
+    rdfs:label "occurs on holiday"@en ;
+    rdfs:comment "Marks an observation as occurring on a specific public holiday."@en ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range  us:PublicHoliday ;
+    owl:inverseOf us:holidayHasOccurrence .
+
+us:holidayHasOccurrence a owl:ObjectProperty ;
+    rdfs:label "holiday has occurrence"@en ;
+    rdfs:comment "Inverse of occursOnHoliday."@en ;
+    rdfs:domain us:PublicHoliday ;
+    rdfs:range  sosa:Observation .
+
+us:appliesToArea a owl:ObjectProperty ;
+    rdfs:label "applies to area"@en ;
+    rdfs:comment "The administrative area(s) where a public holiday is in force."@en ;
+    rdfs:domain us:PublicHoliday ;
+    rdfs:range  us:AdministrativeArea ;
+    owl:inverseOf us:hasApplicableHoliday .
+
+us:hasApplicableHoliday a owl:ObjectProperty ;
+    rdfs:label "has applicable holiday"@en ;
+    rdfs:comment "Inverse of appliesToArea."@en ;
+    rdfs:domain us:AdministrativeArea ;
+    rdfs:range  us:PublicHoliday .
+
+### ------------ DATATYPE PROPERTIES ------------
+
+us:sensorId a owl:DatatypeProperty ;
+    rdfs:label "sensor id"@en ;
+    rdfs:comment "Source identifier of a pedestrian or microclimate sensor."@en ;
+    rdfs:domain us:Sensor ;
+    rdfs:range  xsd:string .
+
+us:siteId a owl:DatatypeProperty ;
+    rdfs:label "site id"@en ;
+    rdfs:comment "Identifier of a sensor installation site (e.g., location_id, site_id)."@en ;
+    rdfs:domain us:SensorLocation ;
+    rdfs:range  xsd:string .
+
+us:streetName a owl:DatatypeProperty ;
+    rdfs:label "street name"@en ;
+    rdfs:comment "Name of the street in the normalized address."@en ;
+    rdfs:domain us:StreetAddress ;
+    rdfs:range  xsd:string .
+
+us:streetNumber a owl:DatatypeProperty ;
+    rdfs:label "street number"@en ;
+    rdfs:comment "Street number in the normalized address."@en ;
+    rdfs:domain us:StreetAddress ;
+    rdfs:range  xsd:string .
+
+us:postcode a owl:DatatypeProperty ;
+    rdfs:label "postcode"@en ;
+    rdfs:comment "Postal code in the normalized address."@en ;
+    rdfs:domain us:StreetAddress ;
+    rdfs:range  xsd:string .
+
+us:pedestrianCount a owl:DatatypeProperty ;
+    rdfs:label "pedestrian count"@en ;
+    rdfs:comment "Total pedestrians counted during the observation interval."@en ;
+    rdfs:domain us:PedestrianObservation ;
+    rdfs:range  xsd:integer .
+
+us:airTemperature a owl:DatatypeProperty ;
+    rdfs:label "air temperature (°C)"@en ;
+    rdfs:comment "Air temperature in degrees Celsius."@en ;
+    rdfs:domain us:MicroclimateObservation ;
+    rdfs:range  xsd:decimal .
+
+us:humidity a owl:DatatypeProperty ;
+    rdfs:label "relative humidity (%)"@en ;
+    rdfs:comment "Relative humidity percentage."@en ;
+    rdfs:domain us:MicroclimateObservation ;
+    rdfs:range  xsd:decimal .
+
+us:pm10 a owl:DatatypeProperty ;
+    rdfs:label "PM10 concentration (µg/m³)"@en ;
+    rdfs:comment "Mass concentration of particulate matter ≤10 µm."@en ;
+    rdfs:domain us:MicroclimateObservation ;
+    rdfs:range  xsd:decimal .
+
+us:pm25 a owl:DatatypeProperty ;
+    rdfs:label "PM2.5 concentration (µg/m³)"@en ;
+    rdfs:comment "Mass concentration of particulate matter ≤2.5 µm."@en ;
+    rdfs:domain us:MicroclimateObservation ;
+    rdfs:range  xsd:decimal .
+
+us:noise a owl:DatatypeProperty ;
+    rdfs:label "noise (dB)"@en ;
+    rdfs:comment "Acoustic noise level, decibels."@en ;
+    rdfs:domain us:MicroclimateObservation ;
+    rdfs:range  xsd:decimal .
