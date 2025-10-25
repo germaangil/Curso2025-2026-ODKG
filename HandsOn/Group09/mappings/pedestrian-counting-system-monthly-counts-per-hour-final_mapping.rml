@@ -61,7 +61,7 @@
     #         rr:parentTriplesMap <#PedestrianLocation>;
     #         rr:joinCondition [
     #             rr:child "Location_ID";
-    #             rr:parent "Location_Id";
+    #             rr:parent "Location_ID";
     #         ]
     #     ]
     # ];
